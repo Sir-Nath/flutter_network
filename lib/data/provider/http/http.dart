@@ -7,12 +7,12 @@ class PostClient {
   static const baseURL = 'https://jsonplaceholder.typicode.com';
   static const postsEndpoint = '$baseURL/posts';
 
-  Future<PostModel> fetchPost(int postId) async {
+  Future<String> fetchPost(int postId) async {
     final url = Uri.parse('$postsEndpoint/$postId');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
-      return PostModel.fromJson(jsonDecode(response.body));
+      return response.body;
     } else {
       throw Exception('failed to load post: $postId');
     }

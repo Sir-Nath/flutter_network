@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_network/data/repository/http_repository.dart';
 
 import '../../data/model/data_model.dart';
 import '../../data/provider/http/http.dart';
@@ -13,10 +14,9 @@ class GetPost extends StatefulWidget {
 class _GetPostState extends State<GetPost> {
   late final TextEditingController _postId;
   var requesting = false;
-  PostClient postClient = PostClient();
   bool isGetPost = false;
-  late Future<PostModel> postModel;
   bool error = false;
+  HttpRepository httpRepository = HttpRepository();
 
   @override
   void initState() {
@@ -44,7 +44,7 @@ class _GetPostState extends State<GetPost> {
         children: [
           if(isGetPost)
             FutureBuilder<PostModel>(
-                future: postModel,
+                future: httpRepository.post,
                 builder: (context, snapshot) {
                   if (snapshot.hasData) {
                     return Padding(
@@ -76,7 +76,7 @@ class _GetPostState extends State<GetPost> {
           ),
           Visibility(
             visible: error,
-              child: Text('Error: Invalid Input')
+              child: const Text('Error: Invalid Input')
           ),
           const SizedBox(height: 20,),
           Row(
@@ -100,7 +100,7 @@ class _GetPostState extends State<GetPost> {
                       throw Exception('');
                     }
                   }
-                  postModel = postClient.fetchPost(checkTextInput());
+                  httpRepository.fetchPost(checkTextInput());
                   setState(() {
                     isGetPost = true;
                     _postId.clear();
